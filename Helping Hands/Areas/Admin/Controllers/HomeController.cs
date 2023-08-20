@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Helping_Hands.Data;
 
 
 namespace Helping_Hands.Areas.Admin.Controllers
@@ -24,11 +25,14 @@ namespace Helping_Hands.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-          //  ViewBag.Nurse = _context.Nurses.ToList();
-           int use = _context.Patients.Max(x => x.PatientUserID);
-            var Nurse = _context.Patients.ToList();
+            //  ViewBag.Nurse = _context.Nurses.ToList();
+            var data = new Datas(_context);
 
-            return View(Nurse);
+           int use = _context.Patients.Max(x => x.PatientUserID);
+
+            var Nurses = data.GetNurses(new Data.Repositories.QueryOptions<Nurses> { });
+
+            return View(Nurses);
         }
     }
 }
