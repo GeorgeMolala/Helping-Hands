@@ -1,0 +1,125 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model List<Patients>
+
+@{
+    ViewData["Title"] = "Home";
+    Layout = "_LayoutAdmin";
+}
+
+<head>
+
+    <link rel="stylesheet" href=~/css/style.css />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+ 
+</head>
+<div class="illus-group-col">
+    <h1 class="headline center"><span class="background_Matte">Welcome </span></h1>
+    <h3 class="title">
+        Administrator
+    </h3>
+    <br />
+
+
+</div>
+<hr />
+<br />
+
+
+
+<h2>Employees</h2>
+
+<div class="box-columned box-spaced-between">
+    <div class="">
+        <a asp-controller="Employees" asp-action="Add"
+           class="btn btn-primary">Add</a>
+    </div>
+    <div class="sortbtn">
+        <button type="button" class="btn btn-primary dropdown-toggle"
+                id="sortDropdownBtn" data-toggle="dropdown"
+                aria-expanded="false">
+            Sort by
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="sortDropdownBtn">
+            <li class="dropdown-item">
+                <a asp-controller="Doctor" asp-action="Index" asp-route-sortBy="none">
+                    -----
+                </a>
+            </li>
+            <li class="dropdown-item">
+                <a asp-controller="Doctor" asp-action="Index" asp-route-sortBy="name">
+                    Name
+                </a>
+            </li>
+            <li class="dropdown-item">
+                <a asp-controller="Doctor" asp-action="Index" asp-route-sortBy="suburb">
+                    Suburb
+                </a>
+            </li>
+            <li class="dropdown-item">
+                <a asp-controller="Doctor" asp-action="Index" asp-route-sortBy="medprac">
+                    Medical Practice
+                </a>
+            </li>
+            <li class="dropdown-item">
+                <a asp-controller="Doctor" asp-action="Index" asp-route-sortBy="status">
+                    Status
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<table class="d-table table-bordered align-content-center">
+    <thead>
+        <tr> <th>Name</th> <th>Surname</th> <th>Gender</th> <th>Email</th> <th>Contact Number</th> <th>Position</th> <th>Department</th> </tr>
+    </thead>
+    <tbody>
+        @foreach (var Nurse in Model)
+        {
+            // int num = medication.MedicationIngredients.Where(s => s.MedicationID == medication.MedicationID).Select(v => v.ActiveIngredientID).FirstOrDefault();
+
+            <tr>
+                <td>@Nurse.FirstName </td>
+                <td>@Nurse.Surname </td>
+                <td>@Nurse.Gender</td>
+                <td>@Nurse.EmailAddress</td>
+                <td>@Nurse.PatientContact</td>
+                <td>@Nurse.Status</td>
+                
+                
+                @*<td>
+                    @foreach (var med in Nurse.Department)
+                    {
+                        //  <span>@med.ActiveIngredients.Where(s=>s.ActiveIngredientID==med.ActiveIngredientID).Select(n=>n.Name)</span>
+                        <span>@med.GetActiveIngredient().Name</span>
+                        <span>@med.Strengths</span>
+                    }
+
+            </td>*@
+
+
+            @*/// <td>@medication.MedicationIngredients.</td>*@
+            <td></td>
+
+            <td>
+                <a asp-controller="Employees" asp-action="Edit"
+                   asp-route-id="@Nurse.PatientUserID">Edit</a>
+                <a asp-controller="Employees" asp-action="Delete"
+                   asp-route-id="@Nurse.PatientUserID">Delete</a>
+            <td>
+        </tr>
+    }
+    </tbody>
+    </tbody>
+
+</table>
+
+
+
+
