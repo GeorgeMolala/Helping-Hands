@@ -69,20 +69,63 @@ namespace Helping_Hands
                     pattern: "Admin/{controller=Home}/{action=Index}/{id?}"
                     );
 
+                // route for paging, sorting, and filtering
+                endpoints.MapControllerRoute(
+                    name: "",
+                    pattern: "{controller}/{action}/page/{pagenumber}/size/{pagesize}/sort/{sortfield}/{sortdirection}/filter/{author}/{genre}/{price}");
+
+                // route for paging and sorting only
+                endpoints.MapControllerRoute(
+                    name: "",
+                    pattern: "{controller}/{action}/page/{pagenumber}/size/{pagesize}/sort/{sortfield}/{sortdirection}");
+
+                // Manager
                 endpoints.MapAreaControllerRoute(
                     name: "manager",
                     areaName: "Manager",
                     pattern: "Manager/{controller=Home}/{action=Index}/{id?}");
+                // route for paging, sorting, and filtering
+                endpoints.MapControllerRoute(
+                    name: "",
+                    pattern: "{controller}/{action}/page/{pagenumber}/size/{pagesize}/sort/{sortfield}/{sortdirection}/filter/{author}/{genre}/{price}");
 
+                // route for paging and sorting only
+                endpoints.MapControllerRoute(
+                    name: "",
+                    pattern: "{controller}/{action}/page/{pagenumber}/size/{pagesize}/sort/{sortfield}/{sortdirection}");
+
+
+                //Nurse
                 endpoints.MapAreaControllerRoute(
                     name: "nurse",
                     areaName: "Nurse",
                     pattern: "Nurse/{controller=Nurse}/{action=Index}/{id?}");
+                // route for paging, sorting, and filtering
+                endpoints.MapControllerRoute(
+                    name: "",
+                    pattern: "{controller}/{action}/page/{pagenumber}/size/{pagesize}/sort/{sortfield}/{sortdirection}/filter/{author}/{genre}/{price}");
 
+                // route for paging and sorting only
+                endpoints.MapControllerRoute(
+                    name: "",
+                    pattern: "{controller}/{action}/page/{pagenumber}/size/{pagesize}/sort/{sortfield}/{sortdirection}");
+
+
+                //Patient
                 endpoints.MapAreaControllerRoute(
                     name: "patient",
                     areaName: "Patient",
                     pattern: "Patient/{controller=Home}/{action=Index}/{id?}");
+
+                // route for paging, sorting, and filtering
+                endpoints.MapControllerRoute(
+                    name: "",
+                    pattern: "{controller}/{action}/page/{pagenumber}/size/{pagesize}/sort/{sortfield}/{sortdirection}/filter/{author}/{genre}/{price}");
+
+                // route for paging and sorting only
+                endpoints.MapControllerRoute(
+                    name: "",
+                    pattern: "{controller}/{action}/page/{pagenumber}/size/{pagesize}/sort/{sortfield}/{sortdirection}");
 
                 endpoints.MapControllerRoute(
                  name: "default",
