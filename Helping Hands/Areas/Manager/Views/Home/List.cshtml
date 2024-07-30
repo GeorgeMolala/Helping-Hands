@@ -1,0 +1,217 @@
+﻿@model NursesListViewModel
+@{
+    ViewData["Title"] = " | Manager ";
+    Layout = "_LayoutManager";
+
+    // aliases to make paging and sorting code shorter
+    RouteDictionary current = Model.CurrentRoute;
+    RouteDictionary routes = Model.CurrentRoute.Clone();
+}
+
+<head>
+
+    <link rel="stylesheet" href=~/css/style.css />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+</head>
+
+<div class="illus-group-col">
+    <div class="container-fluid Intro">
+        <h1 class="headline center"><span class="background_Matte">Welcome Back </span></h1>
+        <br />
+    </div>
+
+    <div>
+        <h2>Overview</h2>
+        <div class="row pl-3">
+
+            <div id="Nurses" class="card" style="width: 18rem;">
+                <img src="~/Images/nurse.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Nurses</h5>
+                    <p class="card-text">Total Nurses: @ViewBag.NursesTotal</p>
+                    <p class="card-text">Total Active: @ViewBag.NursesActive</p>
+                    <a asp-controller="Nurses" asp-action="Index" class="btn btn-primary">Manage Nurses</a>
+                </div>
+            </div>
+
+
+            <div id="Organisation" class="card" style="width: 18rem;">
+                <img src="~/Images/Organisation.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Organisations</h5>
+                    <p class="card-text"> Total Organisations: @ViewBag.Organisation</p>
+                    <a asp-action="Organisation" class="btn btn-primary">Manage Organisation</a>
+                </div>
+            </div>
+
+
+            <div id="CareCOntracts" class="card" style="width: 18rem;">
+                <img src="~/Images/Care.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Care Contracts</h5>
+                    <p class="card-text">Total Care Contract: @ViewBag.CareContractTotal</p>
+                    <p class="card-text">Active Care Contract: @ViewBag.CareContractAcive</p>
+                    <p class="card-text">New Care Contract: @ViewBag.CareContractUnAssigned</p>
+                    <p class="card-text">Assigned Care Contract: @ViewBag.CareContractAssigned</p>
+                    <a asp-controller="Manager" asp-action="Index" class="btn btn-primary">Manage Contracts</a>
+                </div>
+            </div>
+
+
+
+            <div id="CareVisits" class="card" style="width: 18rem;">
+                <img src="~/Images/Appointment.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Care Visits</h5>
+                    <p class="card-text">Total Care Visits: @ViewBag.CareVisitsTotal</p>
+                    <p class="card-text">Active Care Visits: @ViewBag.CareVisitsActive</p>
+                    <a asp-controller="Nurses" asp-action="Index" class="btn btn-primary">View Visits</a>
+                </div>
+            </div>
+
+            <div id="Conditions" class="card" style="width: 18rem;">
+                <img src="~/Images/Infections.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Care Visits</h5>
+                    <p class="card-text">Total Conditions: @ViewBag.ConditionsTotal</p>
+                    <p class="card-text">Active Conditions: @ViewBag.ConditionsActive</p>
+                    <a asp-controller="Nurses" asp-action="Index" class="btn btn-primary">Manage Conditions</a>
+                </div>
+            </div>
+
+            <div id="Provinces" class="card" style="width: 18rem;">
+                <img src="~/Images/Provinces.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Provinces</h5>
+                    <p>Total Provinces: @ViewBag.ProvinceTotal</p>
+                    <a href="#" class="btn btn-primary">Manage Provinces</a>
+                </div>
+            </div>
+
+            <div id="Cities" class="card" style="width: 18rem;">
+                <img src="~/Images/City.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Cities</h5>
+                    <p class="card-text">Total Cities: @ViewBag.CityTotal</p>
+                    <a href="#" class="btn btn-primary">Manage Cities</a>
+                </div>
+            </div>
+
+            <div id="Suburbs" class="card" style="width: 18rem;">
+                <img src="~/Images/Suburb.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Suburbs</h5>
+                    <p class="card-text">Total Suburbs: @ViewBag.SuburbTotal</p>
+                    <br />
+
+                    <a href="#" class="btn btn-primary">Manage Suburbs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+<hr />
+<br />
+
+
+
+<h2>Nurses</h2>
+<div class="row">
+    <div class="col-9">
+        <form asp-action="Filter" method="post" class="form-inline">
+            <label>Suburbs: </label>
+            <select name="filter" class="form-control m-2"
+                    asp-items="@(new SelectList(
+                        Model.Suburbs, "SuburbID", "Name", current.SuburbFilter))">
+                <option value="@NurseGridDTO.DefaultFilter">All</option>
+            </select>
+
+            <button type="submit" class="btn btn-primary mr-2">Filter</button>
+            <button type="submit" class="btn btn-primary"
+                    name="clear" value="true">
+                Clear
+            </button>
+        </form>
+    </div>
+</div>
+
+
+<table class="table table-striped table-hover align-content-center">
+    <thead>
+        <tr>
+            <th>
+              
+                <a asp-action="List" asp-all-route-data="@routes" class="text-black-50"> First Name</a>
+            </th>
+            <th>
+             
+                <a asp-action="List" asp-all-route-data="@routes" class="text-black-50"> Surname </a>
+            </th>
+            <th>Gender</th>
+            <th>Email</th>
+            <th>Contact Number</th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var Nurse in Model.Nurses)
+        {
+            // int num = medication.MedicationIngredients.Where(s => s.MedicationID == medication.MedicationID).Select(v => v.ActiveIngredientID).FirstOrDefault();
+
+            <tr>
+                <td>@Nurse.FirstName </td>
+                <td>@Nurse.Surname </td>
+                <td>@Nurse.Gender</td>
+                <td>@Nurse.EmailAddress</td>
+                <td>@Nurse.NurseContact</td>
+                <td></td>
+
+
+                @*<td>
+                            @foreach (var med in Nurse.Department)
+                            {
+                                //  <span>@med.ActiveIngredients.Where(s=>s.ActiveIngredientID==med.ActiveIngredientID).Select(n=>n.Name)</span>
+                                <span>@med.GetActiveIngredient().Name</span>
+                                <span>@med.Strengths</span>
+                            }
+
+                    </td>*@
+
+
+                @*/// <td>@medication.MedicationIngredients.</td>*@
+                <td></td>
+
+                <td>
+                    <a asp-controller="Employees" asp-action="Edit"
+                       asp-route-id="@Nurse.NurseUserID">Edit</a>
+                    <a asp-controller="Employees" asp-action="Delete"
+                       asp-route-id="@Nurse.NurseUserID">Delete</a>
+                <td>
+            </tr>
+        }
+    </tbody>
+    </tbody>
+
+</table>
+@{
+    routes = Model.CurrentRoute.Clone(); // Reset to current route values *@
+    for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        routes.PageNumber = i;
+        <a asp-action="List" asp-all-route-data="@routes"
+           class="btn btn-primary @Nav.Active(i, current.PageNumber)">@i</a>
+    }
+}
+
+
+
+

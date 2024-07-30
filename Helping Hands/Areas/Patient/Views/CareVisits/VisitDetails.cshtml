@@ -1,0 +1,427 @@
+﻿@model CareVisitListViewModel
+
+@{
+    ViewData["Title"] = " | Accept COntract ";
+    Layout = "_Layout_Patient";
+
+
+}
+
+
+
+
+<h1>Visit Details</h1>
+
+
+<br />
+
+
+<div>
+    @{ if (TempData.Keys.Contains("StartStatus"))
+
+        {
+            <div>
+                <h2>
+                    @TempData["StartStatus"]
+
+                </h2>
+            </div>
+        }
+
+        else if (TempData.Keys.Contains("EndStatus"))
+        {
+            <div>
+                <h2>
+                    @TempData["EndStatus"]
+
+                </h2>
+            </div>
+        }
+
+        else if (TempData.Keys.Contains("CreatedStatus"))
+        {
+            <div>
+                <h2>
+
+                    @TempData["CreatedStatus"]
+
+                </h2>
+            </div>
+        }
+    }
+</div>
+<form method="post">
+
+    <div>
+
+        @foreach (Patients patient in Model.Patients)
+        {
+
+            <div class="row">
+                <label>Patient Name             :@patient.FirstName + @patient.Surname</label>
+
+            </div>
+
+        }
+
+        @foreach (Helping_Hands.CareVisits visit in Model.CareVisit)
+        {
+            ViewBag.ID = visit.ContractNumberID;
+
+            <div class="row">
+                <label>Visit Date             :@Convert.ToDateTime(visit.VisitDate).ToString("dddd, dd MMMM yyyy")</label>
+
+            </div>
+
+            <div class="row">
+                <label>Appointment Time</label>
+                <p>@visit.ApproxArriva</p>
+            </div>
+
+            <div class="row">
+                <label>Arrival Time</label>
+                <p>@visit.ArrivalTime</p>
+            </div>
+
+
+            <div class="row">
+                <label>Wound description</label>
+                <p>@visit.WoundCondition</p>
+            </div>
+
+            <div class="row">
+                <label>Additional Notes</label>
+                <p>@visit.Notes</p>
+            </div>
+
+            <div class="row">
+                <label>Appointment End Time</label>
+                <p>@visit.DepartTime</p>
+            </div>
+
+
+            @*Modal Pop up for Start Session*@
+            <div class="modal fade" id="StartSession" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Start Session</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div>
+                                <label>Arrival time</label>
+                                <input value="" type="time" asp-for="@visit.ArrivalTime" />
+                            </div>
+
+                            <input type="hidden" value="@visit.CareVisitsID" asp-for="@visit.CareVisitsID" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button data-dismiss="modal" data-toggle="modal" data-target="#ConfirmationSessionStart" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            @*Modal Pop up for End Session*@
+            <div class="modal fade" id="EndSession" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Start Session</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div>
+                                <label>Departure time</label>
+                                <input value="" type="time" asp-for="@visit.DepartTime" />
+                            </div>
+
+                            <div>
+                                <label>Injury Status</label>
+                                <input value="" type="text" asp-for="@visit.WoundCondition" />
+                            </div>
+
+                            <div>
+                                <label>Additional Notes</label>
+                                <input value="" type="text" asp-for="@visit.Notes" />
+                            </div>
+
+                            <input type="hidden" value="@visit.CareVisitsID" asp-for="@visit.CareVisitsID" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button data-dismiss="modal" data-toggle="modal" data-target="#ConfirmationSessionEnd" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*Modal Pop up to confirm Session Start *@
+            <div class="modal fade" id="ConfirmationSessionStart" tabindex="-2" role="dialog" aria-labelledby="ConfirmationAcceptance" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <p>Are sure you want to start Session</p>
+                            <input type="hidden" value="@visit.CareVisitsID" asp-for="@visit.CareVisitsID" />
+                            <input type="date" asp-for="@visit.ArrivalTime" hidden="hidden" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" asp-action="StartSession">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*Modal Pop up to confirm Session End *@
+            <div class="modal fade" id="ConfirmationSessionEnd" tabindex="-2" role="dialog" aria-labelledby="ConfirmationAcceptance" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <p>Are sure you want to End Session</p>
+
+                            <div>
+                                <label hidden="hidden">Departure time</label>
+                                <input hidden="hidden" type="time" asp-for="@visit.DepartTime" />
+                            </div>
+
+                            <div>
+                                <label hidden="hidden">Injury Status</label>
+                                <input hidden="hidden" type="text" asp-for="@visit.WoundCondition" />
+                            </div>
+
+                            <div>
+                                <label hidden="hidden">Additional Notes</label>
+                                <input hidden="hidden" type="text" asp-for="@visit.Notes" />
+                            </div>
+
+                            <input type="hidden" value="@visit.CareVisitsID" asp-for="@visit.CareVisitsID" />
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" asp-action="StartSession">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        }
+
+
+        @foreach (Helping_Hands.Suburbs sub in Model.Suburbs)
+        {
+
+            <div class="row">
+                <label>Suburb                 : @sub.Name</label>
+            </div>
+
+        }
+
+
+        @foreach (Helping_Hands.Cities CITY in Model.Cities)
+        {
+
+            <div class="row">
+                <label>Suburb                 : @CITY.Name</label>
+            </div>
+
+        }
+
+
+
+
+
+        <div class="row">
+            <label>Wound Image             : </label>
+            <img src="~/Images/Care.jpg" alt="Wound Image" />
+        </div>
+
+
+
+
+
+
+        @foreach (Helping_Hands.CareVisits care in Model.CareVisit)
+        {
+
+
+
+            <button asp-action="NurseDetails" class="btn-primary" asp-route-id="@care.NurseUserID">Nurse Details</button>
+
+
+        }
+
+
+        <button onclick="history.go(-1)">Back</button>
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+    @*Modal Pop up to confirm Contract Accpetance*@
+    <div class="modal fade" id="ConfirmationAcceptance" tabindex="-2" role="dialog" aria-labelledby="ConfirmationAcceptance" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Specify Start Date</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    @*<p>Are you sure></p>
+                        <input type="hidden" value="@Model.ContractNumberID" asp-for="ContractNumberID" />
+                        <input type="date" asp-for="StartDate" hidden="hidden" />*@
+                </div>
+                <div class="modal-footer">
+                    @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" asp-action="AcceptContract" asp-route-id="@Model.ContractNumberID">Yes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*Modal Pop up to confirm Contract Ending*@
+    <div class="modal fade" id="ConfirmationContractEnd" tabindex="-2" role="dialog" aria-labelledby="ConfirmationContractEnd" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Specify End Date</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    @*<p>Are you sure you want to End Contract?</p>
+                        <input type="hidden" value="@Model.ContractNumberID" asp-for="ContractNumberID" />
+                        <input type="date" asp-for="EndDate" hidden="hidden" />*@
+                </div>
+                <div class="modal-footer">
+                    @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" asp-action="EndContract" asp-route-id="@Model.ContractNumberID">Yes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<form method="post" asp-action="Appointment">
+
+
+
+    @foreach (Helping_Hands.CareVisits visit in Model.CareVisit)
+    {
+
+        @*Modal Pop up to Create Appointment *@
+        <div class="modal fade" id="CreateAppointment" tabindex="-2" role="dialog" aria-labelledby="ConfirmationAcceptance" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Schedule Appointment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="VisitDate">
+                            <label>Visit Date</label>
+                            <input value="" type="date" asp-for="@visit.VisitDate" />
+                        </div>
+
+                        <div class="VisitDate">
+                            <label>Appointment Time</label>
+                            <input value="" type="time" asp-for="@visit.ApproxArriva" />
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button data-dismiss="modal" data-toggle="modal" data-target="#ConfirmCreateAppointment" class="btn btn-primary">Schedule</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Modal Pop up to confirm Appointment creation *@
+        <div class="modal fade" id="ConfirmCreateAppointment" tabindex="-2" role="dialog" aria-labelledby="ConfirmationAcceptance" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Schedule Appointment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+
+                        <input type="text" asp-for="@visit.ContractNumberID" value="@ViewBag.ID" hidden="hidden" />
+
+
+
+
+                        <div class="VisitDate" hidden="hidden">
+                            <label>Visit Date</label>
+                            <input type="date" asp-for="@visit.VisitDate" />
+                        </div>
+
+                        <div class="VisitDate" hidden="hidden">
+                            <label>Appointment Time</label>
+                            <input type="date" asp-for="@visit.ApproxArriva" />
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button asp-action="Appointment" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+
+
+
+
+</form>

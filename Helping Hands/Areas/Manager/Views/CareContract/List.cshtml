@@ -1,0 +1,174 @@
+﻿@model CareContractListViewModel
+
+@{
+    ViewData["Title"] = " | Contracts ";
+    Layout = "_LayoutManager";
+
+    //aliases to make paging and sorting code shorter;
+    RouteDictionary current = Model.CurrentRoute;
+    RouteDictionary routes = Model.CurrentRoute.Clone();
+}
+
+
+
+
+
+
+<h2>Care Contracts</h2>
+<br />
+
+@{ if (TempData.Keys.Contains("ContractStatus"))
+
+    {
+        <div>
+            <h2>
+                @TempData["ContractStatus"]
+
+            </h2>
+        </div>
+
+
+    }
+}
+
+<div class="row">
+    <div class="col-9">
+        <form asp-action="Filter" method="post" class="form-inline">
+
+            <div class="row">
+
+                <input class="form-control" data-toggle="tooltip" data-placement="top" title="Email Field, e.g YourName@domain.com" placeholder="Search by Patient Name" />
+                <button type="submit" class="btn btn-primary mr-2" asp-controller="CareContract" asp-action="Search">Search</button>
+            </div>
+
+            <div class="row">
+                <label>Status: </label>
+                <select name="filter" class="form-control m-2"
+                        asp-items="@(new SelectList(
+                        Model.ContraType, "Key", "Value", current.ContraTypeFilter))">
+                    <option value="@CareContractGridDTO.DefaultFilter">All</option>
+                </select>
+
+
+            </div>
+
+            <div>
+                <label>Period: </label>
+                <select name="filter" class="form-control m-2"
+                        asp-items="@(new SelectList(
+                        Model.Period, "Key", "Value", current.PeriodFilter))">
+                    <option value="@CareContractGridDTO.DefaultFilter">All</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Nurse: </label>
+                <select name="filter" class="form-control m-2"
+                        asp-items="@(new SelectList(
+                        Model.Nurses, "NurseUserID", "FirstName", current.NurseFilter))">
+                    <option value="@CareContractGridDTO.DefaultFilter">All</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary ml-2">Filter</button>
+        </form>
+    </div>
+</div>
+
+
+
+  
+
+    @*<div>
+            <label>Patient: </label>
+            <select name="filter" class="form-control m-2"
+                    asp-items="@(new SelectList(
+                Model.Patients, "PatientUserID", "FirstName", current.PatientFilter))">
+                <option value="@CareVisitGridDTO.DefaultFilter">All</option>
+            </select>
+        </div>*@
+
+    
+</div>
+
+
+
+
+
+<table class="table table-striped table-hover align-content-center">
+    <thead>
+        <tr>
+            <th>
+                Patient Name
+            </th>
+            <th>
+                Date Created
+            </th>
+            <th>Wound Description</th>
+            <th>AddressLine 1</th>
+            <th>AddressLine 2</th>
+            <th>Suburb</th>
+            <th>City</th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var care in Model.CareContracts)
+        {
+            // int num = medication.MedicationIngredients.Where(s => s.MedicationID == medication.MedicationID).Select(v => v.ActiveIngredientID).FirstOrDefault();
+
+            <tr>
+                @foreach (Patients pat in Model.Patients)
+                {
+                    if (pat.PatientUserID == care.PatientUserID)
+                    {
+                        <td>@pat.FirstName @pat.Surname</td>
+                    }
+                }
+                <td>@care.ContractDate </td>
+                <td>@care.WoundDescription</td>
+
+                <td>@care.AddressLine1</td>
+                <td>@care.AddressLine2</td>
+
+                @foreach (Helping_Hands.Suburbs sub in Model.Suburbs)
+                {
+                    if (sub.SuburbID == care.SuburbID)
+                    {
+                        <td>@sub.Name</td>
+                    }
+                }
+                @foreach (Helping_Hands.Cities cit in Model.Cities)
+                {
+                    if (cit.CityID == care.CityID)
+                    {
+                        <td>@cit.Name</td>
+                    }
+                }
+
+
+
+                <td></td>
+
+                <td>
+                    <a asp-controller="CareContract" asp-action="Details"
+                       asp-route-id="@care.ContractNumberID">Details</a>
+
+                <td>
+            </tr>
+        }
+    </tbody>
+    </tbody>
+
+</table>
+
+@{
+    routes = Model.CurrentRoute.Clone(); // Reset to current route values *@
+    for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        routes.PageNumber = i;
+        <a asp-action="List" asp-all-route-data="@routes"
+           class="btn btn-primary @Nav.Active(i, current.PageNumber)">@i</a>
+    }
+}

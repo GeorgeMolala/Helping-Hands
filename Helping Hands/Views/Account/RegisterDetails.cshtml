@@ -1,0 +1,307 @@
+﻿
+@model Patients
+@{
+    ViewBag.Title = "Register";
+
+    string ProvincessID = " ";
+    ViewBag.PRO = ProvincessID;
+    <script>
+        var srlProvs = "@ViewBag.Prov_s"
+        var srlCities = "@ViewBag.City_s";
+        var srlSuburbs = "@ViewBag.Suburb_s";
+    </script>
+}
+
+
+<h1></h1>
+
+<div asp-validation-summary="All" class="text-danger"> </div>
+<form method="post" asp-controller="Account" asp-action="RegisterDetails">
+
+    <div class="form-group row">
+        <div class="col-sm-9">
+
+            <div class="col-sm-7">
+                <label>First Name</label>
+                <input asp-for="FirstName" class="form-control" placeholder="Provide Name" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="FirstName"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-9">
+
+            <div class="col-sm-7">
+                <label>Surname Name :</label>
+                <input asp-for="Surname" class="form-control" placeholder="Provide Surname" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="Surname"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <div class="col-sm-9">
+
+            <div class="col-sm-7">
+                <label>Gender :</label>
+                <select asp-for="Gender" class="form-control" placeholder="Select Gender">
+                    <option>Male</option>
+                    <option>Female</option>
+                </select>
+            </div>
+            <div class="col">
+                <span asp-validation-for="Gender"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="form-group row">
+        <div class="col-sm-9">
+            <div class="col-sm-7">
+                <label>ID Number :</label>
+                <input asp-for="IdNumber" class="form-control" data-toggle="tooltip" data-placement="top" title="ID field, Type it exactly as it is written on your Identity Document" placeholder="Provide Identity Number" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="IdNumber"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="form-group row">
+        <div class="col-sm-9">
+
+            <div class="col-7">
+                <label>Contact Number :</label>
+                <input asp-for="PatientContact" class="form-control" data-toggle="tooltip" data-placement="top" title="Provide your 10 digit phone number e.g 071 2345 678" placeholder="Provide Phone Number" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="PatientContact"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        <div class="col-sm-9">
+            <div class="col-sm-7 row">
+                <label>Email Address :</label>
+                <input asp-for="EmailAddress" class="form-control" data-toggle="tooltip" data-placement="top" title="Email Field, e.g YourName@domain.com" placeholder="Provide Email" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="EmailAddress"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <div class="col-sm-9">
+
+            <div class="col-sm-7">
+                <label>AddressLine1 :</label>
+                <input asp-for="LineAddress1" class="form-control" data-toggle="tooltip" data-placement="top" title="Line 1 Address, e.g 721 Block E" placeholder="Provide Address" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="LineAddress1"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <div class="col-sm-9">
+
+            <div class="col-sm-7">
+                <label>AddressLine2 </label>
+                <input asp-for="LineAddress1" class="form-control" data-toggle="tooltip" data-placement="top" title="Optional" placeholder="Provide Address" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="LineAddress2"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @*Needs to be linked to database*@
+        <div class="col-md-7">
+            <div class="form-group">
+                <label class="control-label">Province </label>
+                <select class="form-control" id="pageProvinceElement" asp-for="ProvinceID" asp-items="@(new SelectList(ViewBag.province, "ProvinceID", "Name"))" data-toggle="tooltip" data-placement="top" title="" placeholder="Select Province">
+                </select>
+            </div>
+
+            <div class="col">
+                <span asp-validation-for="ProvinceID"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        @*Needs to be linked to database*@
+        <div class="col-md-7">
+            <div class="form-group">
+                <label class="control-label">City: </label>
+                <select id="pageCityElement" asp-for="CityID" class="form-control" asp-items="@(new SelectList(ViewBag.cities, "CityID", "Name"))" data-toggle="tooltip" data-placement="top" title="" placeholder="Select City">
+                </select>
+
+            </div>
+
+            <div>
+                <label></label>
+            </div>
+            <div class="col">
+                <span asp-validation-for="CityID"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    @*"@(new SelectList(ViewBag.Pronvices, "Value", "Text"))"*@
+
+    <div class="row">
+        @*Needs to be linked to database*@                    @*"@(new SelectList(ViewBag.suburbs, "SuburbID", "Name"))"*@
+        <div class="col-md-7">
+            <div class="form-group">
+                <label class="control-label">Suburb: </label>
+                <select id="pageSuburbElement" asp-for="SuburbID" class="form-control" asp-items="@(new SelectList(ViewBag.suburbs, "SuburbID", "Name"))" data-toggle="tooltip" data-placement="top" title="" placeholder="Select Suburb">
+                </select>
+            </div>
+
+            <div class="col">
+                <span asp-validation-for="SuburbID"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-9">
+
+            <div class="col-7">
+                <label>Next Of Kin Name :</label>
+                <input asp-for="NextOfKinName" class="form-control" data-toggle="tooltip" data-placement="top" title="Provide your 10 digit phone number e.g 071 2345 678" placeholder="Provide Name" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="NextOfKinName"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-9">
+
+            <div class="col-7">
+                <label>Next of Kin CellPhone :</label>
+                <input asp-for="NextOfKinContact" class="form-control" data-toggle="tooltip" data-placement="top" title="Provide your 10 digit phone number e.g 071 2345 678" placeholder="Provide Phone Number" />
+            </div>
+            <div class="col">
+                <span asp-validation-for="NextOfKinContact"
+                      class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var thisProvinces = document.getElementById('pageProvinceElement');
+        var thisCities = document.getElementById('pageCityElement');
+        var thisSuburbs = document.getElementById('pageSuburbElement');
+        if (typeof srlProvs !== "undefined") {
+            const allProvs = JSON.parse(srlProvs.replace(/&quot;/g, '"'));
+            const allCities = JSON.parse(srlCities.replace(/&quot;/g, '"'));
+            const allSuburbs = JSON.parse(srlSuburbs.replace(/&quot;/g, '"'));
+            thisCities.innerHTML = "";
+            for (var i = 0; i < allCities.length; i++) {
+                var obj = allCities[i];
+                let selectedProvince = thisProvinces.options[thisProvinces.selectedIndex].value;
+                if (selectedProvince == obj["ProvinceID"]) {
+                    let newOption = new Option(obj["Name"], obj["CityID"]);
+                    thisCities.add(newOption, undefined);
+                }
+            }
+            thisSuburbs.innerHTML = "";
+            for (var i = 0; i < allSuburbs.length; i++) {
+                var obj = allSuburbs[i];
+                let selectedCity = thisCities.options[thisCities.selectedIndex].value;
+                if (selectedCity == obj["CityID"]) {
+                    let newOption = new Option(obj["Name"], obj["SuburbID"]);
+                    thisSuburbs.add(newOption, undefined);
+                }
+            }
+            if (thisProvinces) {
+                thisProvinces.addEventListener("change", function () {
+                    thisCities.innerHTML = "";
+                    for (var i = 0; i < allCities.length; i++) {
+                        var obj = allCities[i];
+                        let selectedProvince = thisProvinces.options[thisProvinces.selectedIndex].value;
+                        if (selectedProvince == obj["ProvinceID"]) {
+                            let newOption = new Option(obj["Name"], obj["CityID"]);
+                            thisCities.add(newOption, undefined);
+                        }
+                    }
+                    thisSuburbs.innerHTML = "";
+                    for (var i = 0; i < allSuburbs.length; i++) {
+                        var obj = allSuburbs[i];
+                        let selectedCity = thisCities.options[thisCities.selectedIndex].value;
+                        if (selectedCity == obj["CityID"]) {
+                            let newOption = new Option(obj["Name"], obj["SuburbID"]);
+                            thisSuburbs.add(newOption, undefined);
+                        }
+                    }
+                })
+            }
+            if (thisCities) {
+                console.log("prov defined");
+                thisCities.addEventListener("change", function () {
+                    thisSuburbs.innerHTML = "";
+                    for (var i = 0; i < allSuburbs.length; i++) {
+                        var obj = allSuburbs[i];
+                        let selectedCity = thisCities.options[thisCities.selectedIndex].value;
+                        console.log(selectedCity);
+                        if (selectedCity == obj["CityID"]) {
+                            let newOption = new Option(obj["Name"], obj["SuburbID"]);
+                            thisSuburbs.add(newOption, undefined);
+                        }
+                    }
+                });
+            }
+        }</script>
+
+
+
+    <div class="col-sm-2 align-content-end">
+        <button type="submit" class="btn btn-danger" form-control>
+            Next
+        </button>
+
+        <button class="btn btn-danger" asp-controller="Account" asp-action="Login">Cancel</button>
+
+
+        <button class="btn btn-danger" asp-controller="Account" asp-action="RegisterDetails">Use</button>
+    </div>
+
+
+</form>
+
+

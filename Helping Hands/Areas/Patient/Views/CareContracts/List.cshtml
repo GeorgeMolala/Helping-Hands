@@ -1,0 +1,331 @@
+﻿@model CareContractListViewModel
+
+@{
+    ViewData["Title"] = " | Requests ";
+    Layout = "_Layout_Patient";
+
+    //aliases to make paging and sorting code shorter;
+    RouteDictionary current = Model.CurrentRoute;
+    RouteDictionary routes = Model.CurrentRoute.Clone();
+}
+
+
+
+
+
+
+<h2>Care Requests</h2>
+<br />
+
+@{ if (TempData.Keys.Contains("ContractStatus"))
+
+    {
+        <div>
+            <h2>
+                @TempData["ContractStatus"]
+
+            </h2>
+        </div>
+
+
+    }
+}
+
+<br />
+
+<div class="row">
+    <div class="col-9">
+
+        <div>
+            <button data-dismiss="modal" data-toggle="modal" data-target="#CreateContract" class="btn btn-primary">Create Request</button>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-9">
+        <form asp-action="Filter" method="post" class="form-inline">
+
+            <div class="row">
+
+                <input class="form-control" data-toggle="tooltip" data-placement="top" title="Email Field, e.g YourName@domain.com" placeholder="Search by Patient Name" />
+                <button type="submit" class="btn btn-primary mr-2" asp-controller="CareContract" asp-action="Search">Search</button>
+            </div>
+
+            <div class="row">
+                <label>Status: </label>
+                <select name="filter" class="form-control m-2"
+                        asp-items="@(new SelectList(
+                        Model.ContraType, "Key", "Value", current.ContraTypeFilter))">
+                    <option value="@CareContractGridDTO.DefaultFilter">All</option>
+                </select>
+
+                <button type="submit" class="btn btn-primary ml-2">Filter</button>
+            </div>
+
+
+
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+<table class="table table-striped table-hover align-content-center">
+    <thead>
+        <tr>
+
+            <th>
+                Date Created
+            </th>
+            <th>Wound Description</th>
+            <th>AddressLine 1</th>
+            <th>AddressLine 2</th>
+            <th>Suburb</th>
+            <th>City</th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var care in Model.CareContracts)
+        {
+            // int num = medication.MedicationIngredients.Where(s => s.MedicationID == medication.MedicationID).Select(v => v.ActiveIngredientID).FirstOrDefault();
+
+            <tr>
+
+                <td>@care.ContractDate </td>
+                <td>@care.WoundDescription</td>
+
+                <td>@care.AddressLine1</td>
+                <td>@care.AddressLine2</td>
+
+                @foreach (Helping_Hands.Suburbs sub in Model.Suburbs)
+                {
+                    if (sub.SuburbID == care.SuburbID)
+                    {
+                        <td>@sub.Name</td>
+                    }
+                }
+                @foreach (Helping_Hands.Cities cit in Model.Cities)
+                {
+                    if (cit.CityID == care.CityID)
+                    {
+                        <td>@cit.Name</td>
+                    }
+                }
+
+
+
+                <td></td>
+
+                <td>
+                    <a asp-controller="CareContracts" asp-action="Details"
+                       asp-route-id="@care.ContractNumberID">Details</a>
+
+                <td>
+            </tr>
+        }
+    </tbody>
+    </tbody>
+
+</table>
+
+<form method="post">
+
+    @foreach (Helping_Hands.CareContracts contra in Model.CareContracts)
+    {
+        @*//Modal Pop up for Creating Contracts*@
+        <div class="modal fade" id="CreateContract" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Request Care</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div>
+                            <label for="@contra.WoundDescription">Wound Description</label>
+                            <input value="" type="text" asp-for="@contra.WoundDescription" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@contra.image">Wound Image</label>
+                            <input value="" asp-for="@contra.image" class="custom-file-input" id="customFile"/>
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@contra.AddressLine1">Address Line 1</label>
+                            <input value="" type="text" asp-for="@contra.AddressLine1" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@contra.AddressLine2">Address Line 2</label>
+                            <input value="" type="text" asp-for="@contra.AddressLine2" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@contra.SuburbID">Suburb</label>
+                            <select asp-for="@contra.SuburbID" class="form-control">
+                                <option value="">Select Suburb</option>
+                                @foreach (Helping_Hands.Suburbs subs in Model.Suburbs)
+                                {
+                                    <option value="@subs.SuburbID">@subs.Name</option>
+                                }
+
+                            </select>
+                        </div>
+                        <br />
+                        <div>
+                            <label for="@contra.CityID">City</label>
+                            <select asp-for="@contra.CityID" class="form-control">
+                                <option value="">Select City</option>
+                                @foreach (Helping_Hands.Cities city in Model.Cities)
+                                {
+                                    <option value="@city.CityID">@city.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <br />
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button data-dismiss="modal" data-toggle="modal" data-target="#ConfirmCreateContract" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*//Modal Pop up for confirm Contract creation*@
+        <div class="modal fade" id="ConfirmCreateContract" tabindex="-2" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                      
+
+                        <div hidden="hidden">
+                            <label for="@contra.WoundDescription">Wound Description</label>
+                            <input value="" type="text" asp-for="@contra.WoundDescription" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div class="CreateRecord">
+                            <span>
+                                Do you want to create Care Request?
+                            </span>
+                        </div>
+
+
+                        <div hidden="hidden">
+                            <label for="@contra.image">Wound Image</label>
+                            <input value="" asp-for="@contra.image" class="custom-file-input" />
+                        </div>
+
+                        <br />
+
+                        <div hidden="hidden">
+                            <label for="@contra.AddressLine1">Address Line 1</label>
+                            <input type="text" asp-for="@contra.AddressLine1" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div hidden="hidden">
+                            <label for="@contra.AddressLine2">Address Line 2</label>
+                            <input type="text" asp-for="@contra.AddressLine2" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div hidden="hidden">
+                            <label for="@contra.SuburbID">Suburb</label>
+                            @*<select asp-for="@contra.SuburbID" class="form-control">
+                <option value="">Select Suburb</option>
+                @foreach (Helping_Hands.Suburbs subs in Model.Suburbs)
+                {
+                    <option value="">@subs.Name</option>
+                }
+
+            </select>*@
+
+                            <input type="hidden" asp-for="@contra.SuburbID" />
+
+                        </div>
+                        <br />
+                        <div hidden="hidden">
+                            @*<label for="@contra.CityID">City</label>
+            <select asp-for="@contra.CityID" class="form-control">
+                <option value="">Select City</option>
+                @foreach (Helping_Hands.Cities city in Model.Cities)
+                {
+                    <option value="@city.Name">@city.Name</option>
+                }
+            </select>*@
+                            <input type="hidden" asp-for="@contra.CityID" hidden="hidden" />
+
+                        </div>
+
+                        <br />
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button asp-controller="CareContracts" asp-action="CreateCOntract" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+
+
+
+</form>
+
+
+    <script type="text/javascript">
+
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
+
+    @{
+        routes = Model.CurrentRoute.Clone(); // Reset to current route values *@
+        for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            routes.PageNumber = i;
+            <a asp-action="List" asp-all-route-data="@routes"
+               class="btn btn-primary @Nav.Active(i, current.PageNumber)">@i</a>
+        }
+    }

@@ -1,0 +1,164 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model List<Nurses>
+
+@{
+    ViewData["Title"] = "Home";
+    Layout = "_LayoutAdmin";
+}
+
+<head>
+
+    <link rel="stylesheet" href=~/css/style.css />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+ 
+</head>
+
+<div class="illus-group-col">
+    <div class="container-fluid Intro">
+        <h1 class="headline center"><span class="background_Matte">Welcome Back </span></h1>        
+        <br />
+    </div>
+
+    <div>
+        <h2>System Summary</h2>
+        <div class="row pl-3">
+            <div id="Organisation" class="card" style="width: 18rem;">
+                <img src="~/Images/Organisation.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Organisations</h5>
+                    <p class="card-text"> Total Organisations: @ViewBag.Organisations</p>
+                    <a asp-action="Organisation" class="btn btn-primary">Manage Organisation</a>
+                </div>
+            </div>
+
+            <div id="Managers" class="card" style="width: 18rem;">
+                <img src="~/Images/manager.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Managers</h5>
+                    <p class="card-text">Total Managers: @ViewBag.Managers</p>
+                    <p class="card-text">Total Active: @ViewBag.ManagersActive</p>
+                    <a asp-controller="Manager" asp-action="Index" class="btn btn-primary">Manage Managers</a>
+                </div>
+            </div>
+
+            <div id="Nurses" class="card" style="width: 18rem;">
+                <img src="~/Images/nurse.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Nurses</h5>
+                    <p class="card-text">Total Nurses: @ViewBag.Nurses</p>
+                    <p class="card-text">Total Active: @ViewBag.NursesActive</p>
+                    <a asp-controller="Nurses" asp-action="Index" class="btn btn-primary">Manage Nurses</a>
+                </div>
+            </div>
+
+            <div id="Patients" class="card" style="width: 18rem;">
+                <img src="~/Images/Patient.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Patients</h5>
+                    <p class="card-text">Total Patients: @ViewBag.Patient</p>
+                    <p class="card-text">Total Active: @ViewBag.PatientActive</p>
+                    <a asp-controller="Nurses" asp-action="Index" class="btn btn-primary">Manage Nurses</a>
+                </div>
+            </div>
+
+            <div id="Provinces" class="card" style="width: 18rem;">
+                <img src="~/Images/Provinces.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Provinces</h5>
+                    <p>Total Provinces: @ViewBag.Province</p>
+                    <a href="#" class="btn btn-primary">Manage Provinces</a>
+                </div>
+            </div>
+
+            <div id="Cities" class="card" style="width: 18rem;">
+                <img src="~/Images/City.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Cities</h5>
+                    <p class="card-text">Total Cities: @ViewBag.City</p>
+                    <a href="#" class="btn btn-primary">Manage Cities</a>
+                </div>
+            </div>
+
+            <div id="Suburbs" class="card" style="width: 18rem;">
+                <img src="~/Images/Suburb.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Suburbs</h5>
+                    <p class="card-text">Total Suburbs: @ViewBag.Suburb</p>
+                    <br />
+                    
+                    <a href="#" class="btn btn-primary">Manage Suburbs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+
+</div>
+<hr />
+<br />
+
+
+
+<h2>Nurses</h2>
+
+<div class="box-columned box-spaced-between">
+  
+   
+</div>
+
+<table class="table table-striped table-hover align-content-center">
+    <thead>
+        <tr> <th>Name</th> <th>Surname</th> <th>Gender</th> <th>Email</th> <th>Contact Number</th> <th>Position</th> <th>Department</th> </tr>
+    </thead>
+    <tbody>
+        @foreach (var Nurse in Model)
+        {
+            // int num = medication.MedicationIngredients.Where(s => s.MedicationID == medication.MedicationID).Select(v => v.ActiveIngredientID).FirstOrDefault();
+
+            <tr>
+                <td>@Nurse.FirstName </td>
+                <td>@Nurse.Surname </td>
+                <td>@Nurse.Gender</td>
+                <td>@Nurse.EmailAddress</td>
+                <td>@Nurse.NurseContact</td>
+                <td>@Nurse.Status</td>
+                
+                
+                @*<td>
+                    @foreach (var med in Nurse.Department)
+                    {
+                        //  <span>@med.ActiveIngredients.Where(s=>s.ActiveIngredientID==med.ActiveIngredientID).Select(n=>n.Name)</span>
+                        <span>@med.GetActiveIngredient().Name</span>
+                        <span>@med.Strengths</span>
+                    }
+
+            </td>*@
+
+
+            @*/// <td>@medication.MedicationIngredients.</td>*@
+            <td></td>
+
+            <td>
+                <a asp-controller="Employees" asp-action="Edit"
+                   asp-route-id="@Nurse.NurseUserID">Edit</a>
+                <a asp-controller="Employees" asp-action="Delete"
+                   asp-route-id="@Nurse.NurseUserID">Delete</a>
+            <td>
+        </tr>
+    }
+    </tbody>
+    </tbody>
+
+</table>
+
+
+
+

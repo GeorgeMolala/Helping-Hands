@@ -1,0 +1,555 @@
+﻿
+@model PatientViewModels 
+
+<title>Patient Details</title>
+
+@{
+
+
+    if (TempData.Keys.Contains("PatientUpdate"))
+    {
+        <div>
+            <h2>
+                @TempData["PatientUpdate"]
+
+            </h2>
+        </div>
+    }
+
+}
+
+<div class="Details">
+
+    <section>
+        @foreach (Patients pp in Model.Patients)
+        {
+            <h1>@pp.FirstName @pp.Surname</h1>
+        }
+
+
+    </section>
+    <div class="Body">
+        <div class="BodyDetails">
+
+            @foreach (Patients pati in Model.Patients)
+            {
+                <div class="About Patient">
+                    <h3>Bio</h3>
+                    <br />
+                    <div class="GenderPart">
+                        <label>Gender</label>
+                        <span>@pati.Gender</span>
+                    </div>
+
+                    <div class="DOBPart">
+                        <label>Date of birth</label>
+                        <span>@pati.Dob</span>
+                    </div>
+
+                    <button data-dismiss="modal" data-toggle="modal" data-target="#UpdateBio" class="btn btn-primary">Update Details</button>
+                </div>
+
+                <div class="ContactInfor">
+                    <h3>Contact Information</h3>
+                    <br />
+                    <div class="ContactPart">
+                        <label>Contact Number</label>
+                        <span>@pati.PatientContact</span>
+                    </div>
+
+                    <div class="EmailPart">
+                        <label>Patient Email</label>
+                        <span>@pati.EmailAddress</span>
+                    </div>
+
+                    <div class="AddressLinePart1">
+                        <label>Address Line 1</label>
+                        <span>@pati.LineAddress1</span>
+                    </div>
+
+                    <div class="AddressLinePart2">
+                        <label>Address Line 2</label>
+                        <span>@pati.LineAddress2</span>
+                    </div>
+
+                    @foreach (Helping_Hands.Suburbs sub in Model.Suburbs)
+                    {
+                        <div class="SuburbPart">
+                            <label>Suburb</label>
+                            <span>@sub.Name</span>
+                        </div>
+
+
+                    }
+
+                    @foreach (Helping_Hands.Cities cit in Model.Cities)
+                    {
+                        <div class="CityPart">
+                            <label>City</label>
+                            <span>@cit.Name</span>
+                        </div>
+                    }
+
+                    <button data-dismiss="modal" data-toggle="modal" data-target="#UpdateContact" class="btn btn-primary">Update Contact Information</button>
+
+                </div>
+            }
+
+            <div class="MedicalPart">
+                <h3>Medical History</h3>
+                <br />
+                <div class="ConditionsPart">
+                    <label>Conditions</label>
+                    @foreach (Helping_Hands.ChronicAccoms accom in Model.ChronicAccoms)
+                    {
+
+
+                        foreach (Helping_Hands.ChronicInfections infections in Model.ChronicInfections)
+                        {
+                            if (accom.ChronicID == infections.ChronicID)
+                            {
+
+                                <span>@infections.ConditionName</span>
+
+
+                            }
+                        }
+                    }
+                </div>
+
+                <a asp-action="UpdateMed" class="btn btn-primary">Update Chronic Conditions</a>
+            </div>
+            <br />
+            <div class="EmergencyPart">
+                <h3>Next of kin</h3>
+                <br />
+                <div class="EmergePerson">
+                    <label>Name</label>
+                    @foreach (Patients pat in Model.Patients)
+                    {
+                        <span>@pat.NextOfKinName</span>
+                    }
+
+                </div>
+
+                <div class="EmergeContact">
+                    <label>Contact Number</label>
+                    @foreach (Patients pats in Model.Patients)
+                    {
+                        <span>@pats.NextOfKinContact</span>
+                    }
+
+                </div>
+                <button data-dismiss="modal" data-toggle="modal" data-target="#UpdateNextOfKin" class="btn btn-primary">Update Next of Kin</button>
+            </div>
+
+        </div>
+    </div>
+    <br />
+    <div>
+        <button onclick="history.go(-1)" class="btn btn-primary">Back</button>
+        <a asp-action="ChangePassword" class="btn btn-primary">Change Password</a>
+    </div>
+
+</div>
+<form method="post" asp-controller="Home">
+
+    @foreach (Patients pat in Model.Patients)
+    {
+        @*//Modal Pop up for Updating Bio *@
+        <div class="modal fade" id="UpdateBio" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Bio</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div>
+                            <label for="@pat.FirstName">Name</label>
+                            <input type="text" asp-for="@pat.FirstName" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@pat.Surname">Surname</label>
+                            <input type="text" asp-for="@pat.Surname" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@pat.Gender">Gender</label>
+                            <select asp-for="@pat.Gender" class="form-control">
+                                <option value="">Select Gender</option>
+                                <option value="Female">Female</option>
+                                <option value="Male">Male</option>
+                            </select>
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@pat.Dob">Date of Birth</label>
+                            <input type="date" asp-for="@pat.Dob" class="form-control" />
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button data-dismiss="modal" data-toggle="modal" data-target="#ConfirmUpdateBio" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*//Modal Pop up for updating COntact Information*@
+        <div class="modal fade" id="UpdateContact" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Contact Information</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div>
+                            <label for="@pat.PatientContact">Contact Number</label>
+                            <input type="tel" asp-for="@pat.PatientContact" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@pat.EmailAddress">Email</label>
+                            <input asp-for="@pat.EmailAddress" class="form-control" type="email" />
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@pat.LineAddress1">Address Line 1</label>
+                            <input type="text" asp-for="@pat.LineAddress1" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@pat.LineAddress2">Address Line 2</label>
+                            <input type="text" asp-for="@pat.LineAddress2" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@pat.SuburbID">Suburb</label>
+                            <select asp-for="@pat.SuburbID" class="form-control">
+                                <option value="">Select Suburb</option>
+                                @foreach (Helping_Hands.Suburbs subs in Model.Suburbs)
+                                {
+                                    <option value="@subs.SuburbID">@subs.Name</option>
+                                }
+
+                            </select>
+                        </div>
+                        <br />
+                        <div>
+                            <label for="@pat.CityID">City</label>
+                            <select asp-for="@pat.CityID" class="form-control">
+                                <option value="">Select City</option>
+                                @foreach (Helping_Hands.Cities city in Model.Cities)
+                                {
+                                    <option value="@city.CityID">@city.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <br />
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button data-dismiss="modal" data-toggle="modal" data-target="#ConfirmUpdateContact" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*//Modal Pop up for updating Next Of Kin *@
+        <div class="modal fade" id="UpdateNextOfKin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update Next of Kin</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div>
+                            <label for="@pat.NextOfKinName">Next of Kin Name</label>
+                            <input type="text" asp-for="@pat.NextOfKinName" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div>
+                            <label for="@pat.PatientContact">Next of Kin Contact Number</label>
+                            <input asp-for="@pat.NextOfKinContact" class="form-control" />
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button data-dismiss="modal" data-toggle="modal" data-target="#ConfirmUpdateNextOfKin" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        @*//Modal Pop up for COnfirm Updating Bio *@
+        <div class="modal fade" id="ConfirmUpdateBio" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div hidden="hidden">
+                            <label for="@pat.FirstName">Name</label>
+                            <input type="text" asp-for="@pat.FirstName" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div hidden="hidden">
+                            <label for="@pat.Surname">Surname</label>
+                            <input type="text" asp-for="@pat.Surname" class="form-control" />
+                        </div>
+
+
+
+                        <div class="CreateRecord">
+                            <span>
+                                Do you want to update details?
+                            </span>
+                        </div>
+
+                        <br />
+
+                        <div hidden="hidden">
+                            <label for="@pat.Gender">Gender</label>
+                            <select asp-for="@pat.Gender" class="form-control">
+                                <option value="">Select Gender</option>
+                                <option value="Female">Female</option>
+                                <option value="Male">Male</option>
+                            </select>
+                        </div>
+
+                        <br />
+
+                        <div hidden="hidden">
+                            <label for="@pat.Dob">Date of Birth</label>
+                            <input type="date" asp-for="@pat.Dob" class="form-control" />
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button asp-action="UpdateBio" type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*//Modal Pop up for confirm updating COntact Information*@
+        <div class="modal fade" id="ConfirmUpdateContact" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div hidden="hidden">
+                            <label for="@pat.PatientContact">Contact Number</label>
+                            <input type="tel" asp-for="@pat.PatientContact" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div hidden="hidden">
+                            <label for="@pat.EmailAddress">Email</label>
+                            <input asp-for="@pat.EmailAddress" class="form-control" type="email" />
+                        </div>
+
+                        <br />
+
+                        <div hidden="hidden">
+                            <label for="@pat.LineAddress1">Address Line 1</label>
+                            <input type="text" asp-for="@pat.LineAddress2" class="form-control" />
+                        </div>
+
+
+                        <div class="CreateRecord">
+                            <span>
+                                Do you want to update details?
+                            </span>
+                        </div>
+
+                        <br />
+
+                        <div hidden="hidden">
+                            <label for="@pat.LineAddress2">Address Line 2</label>
+                            <input type="text" asp-for="@pat.LineAddress2" class="form-control" />
+                        </div>
+
+                        <br />
+
+                        <div hidden="hidden">
+                            <label for="@pat.SuburbID">Suburb</label>
+                            <select asp-for="@pat.SuburbID" class="form-control">
+                                <option value="">Select Suburb</option>
+                                @foreach (Helping_Hands.Suburbs subs in Model.Suburbs)
+                                {
+                                    <option value="@subs.SuburbID">@subs.Name</option>
+                                }
+
+                            </select>
+                        </div>
+                        <br />
+                        <div hidden="hidden">
+                            <label for="@pat.CityID">City</label>
+                            <select asp-for="@pat.CityID" class="form-control">
+                                <option value="">Select City</option>
+                                @foreach (Helping_Hands.Cities city in Model.Cities)
+                                {
+                                    <option value="@city.CityID">@city.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <br />
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" asp-action="UpdateContact" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*//Modal Pop up for Confirm updating Next Of Kin *@
+        <div class="modal fade" id="ConfirmUpdateNextOfKin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div hidden="hidden">
+                            <label for="@pat.NextOfKinName">Next of Kin Name</label>
+                            <input type="text" asp-for="@pat.NextOfKinName" class="form-control" />
+                        </div>
+
+                        <div class="CreateRecord">
+                            <span>
+                                Do you want to update details?
+                            </span>
+                        </div>
+
+
+                        <br />
+
+                        <div hidden="hidden">
+                            <label for="@pat.PatientContact">Next of Kin Contact Number</label>
+                            <input asp-for="@pat.NextOfKinContact" class="form-control" />
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" asp-action="UpdateNextOFKin" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        @*//Modal Pop up for Changing Passowrd *@
+        <div class="modal fade" id="ChangePasswordsss" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <label for="@pat.OldPassword">Old Password</label>
+                            <input type="password" asp-for="@pat.OldPassword" class="form-control" />
+                        </div>
+
+                        <div>
+                            <label for="@pat.NewPasword">New Password</label>
+                            <input type="password" asp-for="@pat.NewPasword" class="control" />
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <a type="submit" asp-action="ChangePassword" class="btn btn-primary">Save</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+    @foreach (Patients cred in Model.Patients)
+    {
+
+    }
+
+
+
+</form>

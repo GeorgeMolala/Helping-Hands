@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Helping_Hands</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Helping_Hands</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse mr-auto">
+                    <ul class="navbar-nav nav-tabs flex-grow-1">
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Users</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Manager" asp-controller="Users" asp-action="Index">Nurses</a>
+                                <a class="dropdown-item" asp-area="Manager" asp-controller="Users" asp-action="PatientUsers">Patients</a>
+                            </div>
+                        </li>
+
+
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Manager" asp-controller="CareContract" asp-action="Index">Care Contracts</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Manager" asp-controller="CareVisit" asp-action="Index">Care Visits</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Manager" asp-controller="Conditions" asp-action="Index">Chronic Conditions</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Locations</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Manager" asp-controller="Province" asp-action="Index">Provinces</a>
+                                <a class="dropdown-item" asp-area="Manager" asp-controller="City" asp-action="Index">Cities</a>
+                                <a class="dropdown-item" asp-area="Manager" asp-controller="Suburb" asp-action="Index">Suburbs</a>
+                            </div>
+                        </li>
+
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Reports</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-area="Manager" asp-controller="ReportCare" asp-action="Index">Care Contracts</a>
+                                <a class="dropdown-item" asp-area="Manager" asp-controller="ReportVisit" asp-action="Index">Care Visits</a>
+                                <a class="dropdown-item" asp-area="Manager" asp-controller="ReportNurse" asp-action="Index">Nurses</a>
+                            </div>
+                        </li>
+
+
+                    </ul>
+
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <form method="post" asp-action="LogOut" asp-controller="Account" asp-area="Patient">
+
+                                <div class="row">
+
+                                    <a class=" nav-link text-dark" data-dismiss="modal" data-toggle="modal" data-target="#LogOut">Log Out</a>
+
+                                    <a asp-controller="Home" asp-area="Patient" asp-action="PatientDetails" class="nav-link text-dark">@TempData.Peek("LoggedName")</a>
+                                </div>
+
+                            </form>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    @*Modal Pop up to Confirm Log Out *@
+    <div class="modal fade" id="LogOut" tabindex="-2" role="dialog" aria-labelledby="ConfirmationAcceptance" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <p>Are you sure you want to Log out?</p>
+                    @*<input type="hidden"  asp-for="@Prefsub.SuburbID" hidden="hidden" />*@
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <a type="button" class="btn btn-primary" asp-area="Manager" asp-controller="Home" asp-action="LogOut">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - Helping_Hands - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

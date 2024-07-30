@@ -1,0 +1,131 @@
+﻿
+@model PatientViewModels
+
+<title>PAtient Details</title>
+
+<div class="Details">
+
+    <section>
+        @foreach (Patients pp in Model.Patients)
+        {
+            <h1>@pp.FirstName @pp.Surname</h1>
+        }
+
+
+    </section>
+    <div class="Body">
+        <div class="BodyDetails">
+
+            @foreach (Patients pati in Model.Patients)
+            {
+                <div class="About Patient">
+                    <h3>Bio</h3>
+                    <br />
+                    <div class="GenderPart">
+                        <label>Gender</label>
+                        <span>@pati.Gender</span>
+                    </div>
+
+                    <div class="DOBPart">
+                        <label>Date of birth</label>
+                        <span>@pati.Dob</span>
+                    </div>
+                </div>
+
+                <div class="ContactInfor">
+                    <h3>Contact Information</h3>
+                    <br />
+                    <div class="ContactPart">
+                        <label>Contact Number</label>
+                        <span>@pati.PatientContact</span>
+                    </div>
+
+                    <div class="EmailPart">
+                        <label>Patient Email</label>
+                        <span>@pati.EmailAddress</span>
+                    </div>
+
+                    <div class="AddressLinePart1">
+                        <label>Address Line 1</label>
+                        <span>@pati.LineAddress1</span>
+                    </div>
+
+                    <div class="AddressLinePart2">
+                        <label>Address Line 2</label>
+                        <span>@pati.LineAddress2</span>
+                    </div>
+
+                    @foreach (Helping_Hands.Suburbs sub in Model.Suburbs)
+                    {
+                        <div class="SuburbPart">
+                            <label>Suburb</label>
+                            <span>@sub.Name</span>
+                        </div>
+
+
+                    }
+
+                    @foreach (Helping_Hands.Cities cit in Model.Cities)
+                    {
+                        <div class="CityPart">
+                            <label>City</label>
+                            <span>@cit.Name</span>
+                        </div>
+                    }
+
+
+
+                </div>
+            }
+
+            <div class="MedicalPart">
+                <h3>Medical History</h3>
+                <br />
+                <div class="ConditionsPart">
+                    <label>Conditions</label>
+                    @foreach (Helping_Hands.ChronicAccoms accom in Model.ChronicAccoms)
+                    {
+
+
+                        foreach (Helping_Hands.ChronicInfections infections in Model.ChronicInfections)
+                        {
+                            if (accom.ChronicID == infections.ChronicID)
+                            {
+
+                                <span>@infections.ConditionName</span>
+
+
+                            }
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="EmergencyPart">
+                <h3>Next of kin</h3>
+                <br />
+                <div class="EmergePerson">
+                    <label>Name</label>
+                    @foreach (Patients pat in Model.Patients)
+                    {
+                        <span>@pat.NextOfKinName</span>
+                    }
+
+                </div>
+
+                <div class="EmergeContact">
+                    <label>Contact Number</label>
+                    @foreach (Patients pats in Model.Patients)
+                    {
+                        <span>@pats.NextOfKinContact</span>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <button onclick="history.go(-1)">Back</button>
+</div>

@@ -1,0 +1,330 @@
+﻿@model CareContractListViewModel
+
+@{
+    ViewData["Title"] = " | Accept COntract ";
+    Layout = "_LayoutManager";
+
+
+
+}
+<h1>Contract Details</h1>
+@{       if (TempData.Keys.Contains("ContractCreated"))
+
+          {
+              <div>
+                   <h2>
+                       @TempData["ContractCreated"]
+
+                  </h2>
+             </div>
+
+
+          }
+}
+<br />
+
+
+<br />
+<form method="post" >
+
+    <div>
+
+        @foreach (Patients pat in Model.Patients)
+        {
+            <div class="row">
+                <label>Patient Name             :@pat.FirstName @pat.Surname</label>
+
+            </div>
+        }
+
+        @foreach (Helping_Hands.CareContracts care in Model.CareContracts)
+        {
+            ViewBag.ID = care.ContractNumberID;
+            ViewBag.Use = care.NurseUserID;
+
+            <div class="row">
+                <label>Contract Date             :@Convert.ToDateTime(care.ContractDate).ToString("dddd, dd MMMM yyyy")</label>
+
+            </div>
+
+            <div class="row">
+                <label>Start Date</label>
+                <p>@Convert.ToDateTime(care.StartDate).ToString("dddd, dd MMMM yyyy")</p>
+            </div>
+
+            <div>
+                <label>End Date</label>
+                <p>@Convert.ToDateTime(care.EndDate).ToString("dddd, dd MMMM yyyy")</p>
+            </div>
+
+            <div class="row">
+                <label>Wound description</label>
+                <p>@care.WoundDescription</p>
+            </div>
+
+            <div class="row">
+                <label>Wound Image             : </label>
+                <img src="~/Images/Care.jpg" alt="Wound Image" />
+            </div>
+
+            <div class="row">
+                <label>Address Line 1                 : @care.AddressLine1</label>
+            </div>
+
+
+            <div class="row">
+                <label>Address Line 2                 : @care.AddressLine2</label>
+            </div>
+
+
+
+            @*Modal Pop up for Contract start date*@
+            <div class="modal fade" id="Confirmationa" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Assign Nurse</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+              
+
+                            <select asp-for="@care.NurseUserID" class="form-control">
+                                <option value="">Select Nurse</option>
+                                @foreach (Helping_Hands.Nurses nus in Model.NurseSelect)
+                                {
+
+                                    <option value="@nus.NurseUserID">
+                                        @nus.FirstName
+                                    </option>
+                                }
+                            </select>
+
+
+                            <input type="hidden" value="@care.ContractNumberID" asp-for="@care.ContractNumberID" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button data-dismiss="modal" data-toggle="modal" data-target="#ConfirmationAcceptance" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+            @*Modal Pop up to confirm Contract Accpetance*@
+            <div class="modal fade" id="ConfirmationAcceptance" tabindex="-2" role="dialog" aria-labelledby="ConfirmationAcceptance" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            
+                            <input type="hidden" value="@ViewBag.ID" asp-for="@care.ContractNumberID" />
+
+
+                            <span>Do you want to Assign Nurse to Contract?</span>
+
+
+                            <select hidden="hidden" asp-for="@care.NurseUserID" class="form-control">
+                                <option value="">Select Nurese</option>
+                                @foreach (Helping_Hands.Nurses nus in Model.Nurses)
+                                {
+
+                                    <option value="@nus.NurseUserID">
+                                        @nus.FirstName @nus.Surname
+                                    </option>
+                                }
+                            </select>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-primary" type="submit" asp-action="AcceptContract">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*Modal Pop up to confirm Contract Ending*@
+            <div class="modal fade" id="ConfirmationContractEnd" tabindex="-2" role="dialog" aria-labelledby="ConfirmationContractEnd" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Specify End Date</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <p>Are you sure you want to End Contract?</p>
+                            <input type="hidden" value="@care.ContractNumberID" asp-for="@care.ContractNumberID" />
+                            @*<input type="date" asp-for="EndDate" hidden="hidden" />*@
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" asp-action="EndContract" asp-route-id="@care.ContractNumberID">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+        @foreach (Helping_Hands.Suburbs sub in Model.Suburbs)
+        {
+            <div class="row">
+                <label>Suburb                 : @sub.Name</label>
+            </div>
+        }
+
+
+        @foreach (Helping_Hands.Cities cit in Model.Cities)
+        {
+            <div class="row">
+                <label>City                 : @cit.Name</label>
+            </div>
+        }
+
+
+
+
+        @{
+            if (TempData.Keys.Contains("StatusUpdate"))
+            {
+                if (TempData["StatusUpdate"].ToString() == "Updated")
+                {
+                    <button type="button" data-toggle="modal" data-target="#CreateAppointment">Schedule Appointment</button>
+                }
+
+            }
+            else
+            {
+                @foreach (Helping_Hands.CareContracts nurse in Model.CareContracts)
+                {
+                    if (nurse.NurseUserID == 0 || nurse.NurseUserID == null)
+                    {
+                        <button type="button" data-toggle="modal" data-target="#Confirmationa">Accept</button>
+                    }                 
+                }
+
+            }
+        }
+
+        @foreach (Helping_Hands.CareContracts pati in Model.CareContracts)
+        {
+            <button asp-action="PatientDetails" class="btn-primary" asp-route-id="@pati.ContractNumberID">Patient Profile</button>
+        }
+
+
+        <button type="button" data-toggle="modal" data-target="#ConfirmationContractEnd">End Contract</button>
+
+        @foreach (Helping_Hands.CareContracts cont in Model.CareContracts)
+        {
+            <button asp-controller="CareVisit" asp-action="AppointmentList" asp-route-id="@cont.ContractNumberID">Appointments History</button>
+        }
+
+
+        <button onclick="history.go(-1)">Back</button>
+
+    </div>
+
+  
+
+</form>
+
+<form method="post" asp-action="Appointment">
+
+
+
+    @foreach (Helping_Hands.CareVisits visit in Model.CareVisits)
+    {
+
+        @*Modal Pop up to Create Appointment *@
+        <div class="modal fade" id="CreateAppointment" tabindex="-2" role="dialog" aria-labelledby="ConfirmationAcceptance" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Schedule Appointment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="VisitDate">
+                            <label>Visit Date</label>
+                            <input value="" type="date" asp-for="@visit.VisitDate" />
+                        </div>
+
+                        <div class="VisitDate">
+                            <label>Appointment Time</label>
+                            <input value="" type="time" asp-for="@visit.ApproxArriva" />
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button data-dismiss="modal" data-toggle="modal" data-target="#ConfirmCreateAppointment" class="btn btn-primary">Schedule</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Modal Pop up to confirm Appointment creation *@
+        <div class="modal fade" id="ConfirmCreateAppointment" tabindex="-2" role="dialog" aria-labelledby="ConfirmationAcceptance" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Schedule Appointment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+
+                        <input type="hidden" asp-for="@visit.ContractNumberID" value="@ViewBag.ID" />
+                        <input type="hidden" asp-for="@visit.NurseUserID" value="@ViewBag.Use" />
+
+
+
+                        <div class="VisitDate" hidden="hidden">
+                            <label>Visit Date</label>
+                            <input type="date" asp-for="@visit.VisitDate" />
+                        </div>
+
+                        <div class="VisitDate" hidden="hidden">
+                            <label>Appointment Time</label>
+                            <input type="date" asp-for="@visit.ApproxArriva" />
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button asp-action="Appointment" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+
+
+
+
+</form>
